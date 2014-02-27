@@ -77,3 +77,10 @@ class SPI(BBIO):
 		self.timeout(0.1)
 		return self.response(1, True)
 
+	def write_then_read(write, response_len = 0, cs = False):
+		self.port.write('\x04' if cs  else '\x05')
+		self.port.write(struct.pack('>h', len(write)))
+		self.port.write(struct.pack('>h', response_len))
+		if len(write) > 0: self.port.write(write)
+		if (self.port.read(1) != '\x01'): raise Exception("Bus pirate reported error")
+		return self.port.read(response_len)
