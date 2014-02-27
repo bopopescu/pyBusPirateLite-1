@@ -46,9 +46,9 @@ class BBIOPins:
 class BBIO:
 	def __init__(self, p="/dev/bus_pirate", s=115200, t=1):
 		self.port = serial.Serial(p, s, timeout=t)
-	
+
 	def BBmode(self):
-		self.port.flushInput();		
+		self.port.flushInput();
 		for i in range(20):
 			self.port.write("\x00");
 			r,w,e = select.select([self.port], [], [], 0.01);
@@ -78,19 +78,19 @@ class BBIO:
 		self.timeout(0.1)
 		if self.response(4) == "ART1": return 1
 		else: return 0
-		
+
 	def enter_1wire(self):
 		self.port.write("\x04")
 		self.timeout(0.1)
 		if self.response(4) == "1W01": return 1
 		else: return 0
-		
+
 	def enter_rawwire(self):
 		self.port.write("\x05")
 		self.timeout(0.1)
 		if self.response(4) == "RAW1": return 1
 		else: return 0
-		
+
 	def resetBP(self):
 		self.reset()
 		self.port.write("\x0F")
@@ -105,7 +105,7 @@ class BBIO:
 		return self.response(1)
 
 	def raw_set_pins(self, pins):
-		self.port.write(chr(0x80 | config))
+		self.port.write(chr(0x80 | pins))
 		self.timeout(0.1)
 		return self.response(1)
 
@@ -147,7 +147,7 @@ class BBIO:
 		self.timeout(0.1)
 		return self.response()
 
-	""" ADC """	
+	""" ADC """
 	def ADC_measure(self):
 		self.port.write("\x14")
 		self.timeout(0.1)
